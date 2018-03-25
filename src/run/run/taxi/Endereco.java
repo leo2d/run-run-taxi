@@ -1,4 +1,5 @@
 package run.run.taxi;
+
 public class Endereco {
 
     private String logradouro;
@@ -6,16 +7,36 @@ public class Endereco {
     private String complemento;
     private String cep;
     private int numero;
+    private String estado;
 
-    public Endereco(String logradouro, String bairro, String complemento, String cep, int numero) {
+    public Endereco(String logradouro, String bairro, String complemento, String cep, int numero, String estado, String cidade) {
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.complemento = complemento;
         this.cep = cep;
         this.numero = numero;
+        this.estado = estado;
+        this.cidade = cidade;
+    }
+    
+    
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
-    
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+    private String cidade;
 
     public Endereco() {
     }

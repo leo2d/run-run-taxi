@@ -1,4 +1,5 @@
 package run.run.taxi;
+
 public class Cliente {
 
     private int codigo;
@@ -7,21 +8,21 @@ public class Cliente {
     private String telefoneB;
     private Endereco endereco;
 
-    public Cliente(String nome, String telefoneA, String telefoneB) {
-        this.codigo += 1;
+    public Cliente(int codigoCliente, String nome, String telefoneA, String telefoneB, Endereco endereco) {
+        this.codigo = codigoCliente;
         this.nome = nome;
         this.telefoneA = telefoneA;
         this.telefoneB = telefoneB;
-        this.endereco = new Endereco();
+        this.endereco = endereco;
     }
 
-    public Cliente(String nome) {
-        this.codigo += 1;
+    public Cliente(int codigoCliente, String nome) {
+        this.codigo = codigoCliente;
         this.nome = nome;
     }
 
     public int getCodigo() {
-        return codigo;
+        return this.codigo;
     }
 
     public String getNome() {
@@ -38,10 +39,6 @@ public class Cliente {
 
     public Endereco getEndereco() {
         return endereco;
-    }
-
-    public void gerarCodigo() {
-        //this.codigo = codigo;
     }
 
     public void setNome(String nome) {
