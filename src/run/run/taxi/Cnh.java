@@ -4,17 +4,17 @@ import java.util.Date;
 
 class Cnh {
 
-    private char categoria;
+    private String categoria;
     private int numero;
-    private Date validade;
+    private String validade;
 
-    public Cnh(char categoria, int numero, Date validade) {
+    public Cnh(String categoria, int numero, String validade) {
         this.categoria = categoria;
         this.numero = numero;
         this.validade = validade;
     }
 
-    public char getCategoria() {
+    public String getCategoria() {
         return categoria;
     }
 
@@ -22,11 +22,11 @@ class Cnh {
         return numero;
     }
 
-    public Date getValidade() {
+    public String getValidade() {
         return validade;
     }
 
-    public void setCategoria(char categoria) {
+    public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
 
@@ -34,7 +34,7 @@ class Cnh {
         this.numero = numero;
     }
 
-    public void setValidade(Date validade) {
+    public void setValidade(String validade) {
         this.validade = validade;
     }
 
