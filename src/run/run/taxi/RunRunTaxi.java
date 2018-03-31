@@ -18,17 +18,20 @@ public class RunRunTaxi {
     }
 
     public static void ImprimirMenuCadastro() {
-        System.out.println(" 1 - Cadastrar cliente");
+        System.out.println("\n 1 - Cadastrar cliente");
         System.out.println(" 2 - Cadastrar colaborador");
         System.out.println(" 3 - Agendar corrida");
-        System.out.println(" 4 - Sair");
+        System.out.println(" 4 - Desligar Colaborador");
+        System.out.println(" 5 - Impprimir Colaboradores");
+        System.out.println(" 6 - Impprimir Clientes");
+        System.out.println(" 7 - Sair");
 
         int resposta = le.nextInt();
         ValidarOpcaoMenu(resposta);
     }
 
     public static void ValidarOpcaoMenu(int resposta) {
-        int[] opcoes = {1, 2, 3, 4};
+        int[] opcoes = {1, 2, 3, 4, 5, 6, 7};
         if (IntStream.of(opcoes).anyMatch((int x) -> x == resposta)) {
             ChamarCadastroCorreto(resposta);
         } else {
@@ -53,8 +56,20 @@ public class RunRunTaxi {
                 AgendarCorrida();
                 ImprimirMenuCadastro();
                 break;
+            case 4:
+                DesligarColaborador();
+                ImprimirMenuCadastro();
+                break;
+            case 5:
+                ImprimirColaboradores();
+                ImprimirMenuCadastro();
+                break;
+            case 6:
+                ImprimirClientes();
+                ImprimirMenuCadastro();
+                break;
             default:
-                System.out.println("Encerrando Seção...");
+                System.out.println("Encerrando Seção...\n");
                 break;
         }
 
@@ -104,10 +119,10 @@ public class RunRunTaxi {
                 System.out.println("Cep: " + c.getEndereco().getCep());
                 System.out.println("Bairro: " + c.getEndereco().getBairro());
                 System.out.println("Rua/Logradouro: " + c.getEndereco().getLogradouro());
-                System.out.println("Numero: " + c.getEndereco().getNumero());    
+                System.out.println("Numero: " + c.getEndereco().getNumero());
             }
-            
-            System.out.println("\n============================================================\n");   
+
+            System.out.println("\n============================================================\n");
         }
     }
 
@@ -135,7 +150,35 @@ public class RunRunTaxi {
         Colaborador colaborador = new Colaborador(nome, cpf, numeroVr, telFixo,
                 telMovel, dataAdmissao, CadastrarCnh(), CadastrarVeiculo(), CadastrarEndereco());
         Colaboradores.add(colaborador);
-        ImprimirColaboradores();
+    }
+
+    public static Colaborador BuscarColaboradorPorCpf() {
+
+        System.out.println("Digite o Cpf: ");
+        String cpf = le.next().replaceAll("[ .-]", "");
+        Colaborador colaborador = null;
+        for (Colaborador c : Colaboradores) {
+            if (c.getCpf().equals(cpf)) {
+                colaborador = c;
+            }
+        }
+        if (colaborador == null) {
+            System.out.println(" Sem resultados. Verifique o cpf e tente novamente\n");
+            BuscarColaboradorPorCpf();
+        }
+        System.out.println("Resultado: " + colaborador.getNome());
+        return colaborador;
+    }
+
+    public static void DesligarColaborador() {
+
+        Colaborador colaborador = BuscarColaboradorPorCpf();
+        System.out.print("Digite a data de desligamento: ");
+        String dataDesligamento = le.next();
+        colaborador.setDataDesligamento(dataDesligamento);
+        colaborador.setFuncionarioAtivo(false);
+        System.out.print("Colaborador inativado com sucesso.\n");
+
     }
 
     public static void ImprimirColaboradores() {
@@ -156,8 +199,12 @@ public class RunRunTaxi {
             System.out.println("Bairro: " + c.getEndereco().getBairro());
             System.out.println("Rua/Logradouro: " + c.getEndereco().getLogradouro());
             System.out.println("Numero: " + c.getEndereco().getNumero());
-            if (!empty(c.getDataDesligamento()))
-                System.out.print("Data de desligamento: " + c.getDataDesligamento());
+            if (!c.isFuncionarioAtivo()) {
+                System.out.println("Status: Desligado");
+                System.out.print("Data de desligamento: " + c.getDataDesligamento() + "\n");
+            } else {
+                System.out.println("Status: Ativo \n");
+            }
             System.out.println("\n============================================================\n");
         }
     }

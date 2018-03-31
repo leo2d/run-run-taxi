@@ -16,6 +16,7 @@ public class Colaborador {
     private String dataDesligamento;
     private String telefoneFixo;
     private String telefoneMovel;
+    private boolean funcionarioAtivo;
 
     public Colaborador(String nome, String cpf, int numeroVR, String telefoneFixo, 
             String telefoneMovel, String dataAdmissao, Cnh cnh, Veiculo veiculo,Endereco endereco) {
@@ -28,6 +29,15 @@ public class Colaborador {
         this.telefoneFixo = telefoneFixo;
         this.telefoneMovel = telefoneMovel;
         this.dataAdmissao = dataAdmissao;
+        this.funcionarioAtivo = true;
+    }
+
+    public void setFuncionarioAtivo(boolean funcionarioAtivo) {
+        this.funcionarioAtivo = funcionarioAtivo;
+    }
+
+    public boolean isFuncionarioAtivo() {
+        return funcionarioAtivo;
     }
 
     public String getNome() {
