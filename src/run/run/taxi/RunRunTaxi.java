@@ -9,69 +9,167 @@ public class RunRunTaxi {
 
     static List<Colaborador> Colaboradores = new ArrayList<Colaborador>();
     static List<Cliente> Clientes = new ArrayList<Cliente>();
+    static List<Corrida> Corridas = new ArrayList<Corrida>();
     static Scanner le = new Scanner(System.in);
     static int codigoCliente = 0;
 
     public static void main(String[] args) {
 
-        ImprimirMenuCadastro();
+        System.out.println("\n****************************************\n");
+        System.out.println("\tBem vindo ao Run Run Taxi");
+        System.out.println("\n****************************************\n \n");
+        ImprimirMenuInicial();
     }
 
-    public static void ImprimirMenuCadastro() {
-        System.out.println("\n 1 - Cadastrar cliente");
-        System.out.println(" 2 - Cadastrar colaborador");
-        System.out.println(" 3 - Agendar corrida");
-        System.out.println(" 4 - Desligar Colaborador");
-        System.out.println(" 5 - Impprimir Colaboradores");
-        System.out.println(" 6 - Impprimir Clientes");
-        System.out.println(" 7 - Sair");
+    public static void ImprimirMenuInicial() {
+        System.out.println("\n 1 - Menu cliente");
+        System.out.println(" 2 - Menu colaborador");
+        System.out.println(" 3 - Menu corrida");
+        System.out.println(" 4 - Sair\n");
 
         int resposta = le.nextInt();
-        ValidarOpcaoMenu(resposta);
-    }
+        int[] opcoes = {1, 2, 3, 4};
 
-    public static void ValidarOpcaoMenu(int resposta) {
-        int[] opcoes = {1, 2, 3, 4, 5, 6, 7};
-        if (IntStream.of(opcoes).anyMatch((int x) -> x == resposta)) {
-            ChamarCadastroCorreto(resposta);
+        if (ValidarOpcaoMenu(resposta, opcoes)) {
+            switch (resposta) {
+                case 1:
+                    ImprimirMenuCliente();
+                    break;
+                case 2:
+                    ImprimirMenuColaborador();
+                    break;
+                case 3:
+                    ImprimirMenuCorrida();
+                    break;
+                default:
+                    System.out.println("Encerrando Seção...\n");
+                    break;
+            }
         } else {
             System.out.println("\n**Opção inválida! Tente novamente.\n");
-            ImprimirMenuCadastro();
+            ImprimirMenuInicial();
+        }
+    }
+
+    public static void ImprimirMenuCliente() {
+        
+        System.out.println("\t Opções dos clientes ");
+        System.out.println("____________________________________\n");
+        System.out.println("\n 1 - Cadastrar cliente");
+        System.out.println(" 2 - Listar clientes Cadastrados");
+        System.out.println(" 3 - Voltar");
+        System.out.println(" 4 - Sair\n");
+
+        int[] opcoes = {1, 2, 3, 4};
+        byte resposta = le.nextByte();
+        if (ValidarOpcaoMenu(resposta, opcoes)) {
+            switch (resposta) {
+                case 1:
+                    CadastrarCliente();
+                    ImprimirMenuCliente();
+                    break;
+                case 2:
+                    ImprimirClientes();
+                    ImprimirMenuCliente();
+                    break;
+                case 3:
+                    ImprimirMenuInicial();
+                    break;
+                default:
+                    System.out.println("Encerrando Seção...\n");
+                    break;
+            }
+        } else {
+            System.out.println("\n**Opção inválida! Tente novamente.\n");
+            ImprimirMenuInicial();
         }
 
     }
 
-    public static void ChamarCadastroCorreto(int resposta) {
+    public static void ImprimirMenuColaborador() {
+        System.out.println("\t Opções dos colaboradores ");
+        System.out.println("___________________________________________\n");
+        System.out.println(" 1 - Cadastrar colaborador");
+        System.out.println(" 2 - Desligar colaborador");
+        System.out.println(" 3 - Listar colaboradores Cadastrados");
+        System.out.println(" 4 - Voltar");
+        System.out.println(" 5 - Sair\n");
 
-        switch (resposta) {
-            case 1:
-                CadastrarCliente();
-                ImprimirMenuCadastro();
-                break;
-            case 2:
-                CadastrarColaborador();
-                ImprimirMenuCadastro();
-                break;
-            case 3:
-                AgendarCorrida();
-                ImprimirMenuCadastro();
-                break;
-            case 4:
-                DesligarColaborador();
-                ImprimirMenuCadastro();
-                break;
-            case 5:
-                ImprimirColaboradores();
-                ImprimirMenuCadastro();
-                break;
-            case 6:
-                ImprimirClientes();
-                ImprimirMenuCadastro();
-                break;
-            default:
-                System.out.println("Encerrando Seção...\n");
-                break;
+        int[] opcoes = {1, 2, 3, 4, 5};
+        byte resposta = le.nextByte();
+        if (ValidarOpcaoMenu(resposta, opcoes)) {
+            switch (resposta) {
+                case 1:
+                    CadastrarColaborador();
+                    ImprimirMenuColaborador();
+                    break;
+                case 2:
+                    DesligarColaborador();
+                    ImprimirMenuColaborador();
+                    break;
+                case 3:
+                    ImprimirColaboradores();
+                    ImprimirMenuColaborador();
+                    break;
+                case 4:
+                    ImprimirMenuInicial();
+                    break;
+                default:
+                    System.out.println("Encerrando Seção...\n");
+                    break;
+            }
+        } else {
+            System.out.println("\n**Opção inválida! Tente novamente.\n");
+            ImprimirMenuInicial();
         }
+    }
+
+    public static void ImprimirMenuCorrida() {
+        System.out.println("\t Opções das corridas ");
+        System.out.println("____________________________________\n");
+        System.out.println(" 1 - Agendar corrida programada");
+        System.out.println(" 2 - Agendar corrida imediata");
+        System.out.println(" 3 - Mudar Status da corrida");
+        System.out.println(" 4 - Voltar");
+        System.out.println(" 5 - Sair\n");
+
+        int[] opcoes = {1, 2, 3, 4, 5};
+        byte resposta = le.nextByte();
+        if (ValidarOpcaoMenu(resposta, opcoes)) {
+            switch (resposta) {
+                case 1:
+                    AgendarCorridaProgramada();
+                    ImprimirMenuCorrida();
+                    break;
+                case 2:
+                    AgendarCorridaImediata();
+                    ImprimirMenuCorrida();
+                    break;
+                case 3:
+                    MudarStatusCorrida();
+                    ImprimirMenuCorrida();
+                    break;
+                case 4:
+                    ImprimirMenuInicial();
+                    break;
+                default:
+                    System.out.println("Encerrando Seção...\n");
+                    break;
+            }
+        } else {
+            System.out.println("\n**Opção inválida! Tente novamente.\n");
+            ImprimirMenuInicial();
+        }
+
+    }
+
+    public static Boolean ValidarOpcaoMenu(int resposta, int[] opcoes) {
+
+        if (IntStream.of(opcoes).anyMatch((int x) -> x == resposta)) {
+            return true;
+        }
+
+        return false;
 
     }
 
@@ -82,18 +180,19 @@ public class RunRunTaxi {
         System.out.println(" 1 - Completo ");
         System.out.println(" 2 - Rápido ");
         byte cadastroCompleto = le.nextByte();
+        le.nextLine();
 
         System.out.println(" Nome: ");
-        String nome = le.next();
+
         codigoCliente++;
         if (cadastroCompleto == 1) {
-            CadastrarCliente(nome);
+            CadastrarCliente(le.nextLine());
         } else {
-            Cliente cliente = new Cliente(codigoCliente, nome);
+            Cliente cliente = new Cliente(codigoCliente, le.nextLine());
             Clientes.add(cliente);
             System.out.println(" Ok. Finalizando Cadastro.. ");
+            ImprimirMenuInicial();
         }
-        ImprimirClientes();
     }
 
     public static void CadastrarCliente(String nome) {
@@ -104,7 +203,6 @@ public class RunRunTaxi {
         String telefoneB = le.next();
         Cliente cliente = new Cliente(codigoCliente, nome, telefoneA, telefoneB, CadastrarEndereco());
         Clientes.add(cliente);
-        ImprimirClientes();
     }
 
     public static void ImprimirClientes() {
@@ -209,8 +307,65 @@ public class RunRunTaxi {
         }
     }
 
-    public static void AgendarCorrida() {
+    public static Cliente BuscarClientePorNome() {
 
+        Cliente cliente = null;
+        List<Cliente> clientesRetornados = new ArrayList<Cliente>();
+        System.out.println("Digite o nome do cliente: ");
+        String nome = le.next().replaceAll("[ .-]", "");
+        nome = nome.trim();
+
+        for (Cliente c : Clientes) {
+            if (c.getNome().contains(nome)) {
+                clientesRetornados.add(c);
+            }
+        }
+
+        System.out.println("Verifique se o cliente esta na lista e digite o codigo, caso esteja: ");
+
+        for (Cliente c : clientesRetornados) {
+            System.out.print("Codigo: " + c.getCodigo() + " - Nome: " + c.getNome());
+        }
+
+        int codigo = le.nextInt();
+
+        cliente = clientesRetornados.stream()
+                .filter(x -> x.getCodigo() == codigo)
+                .findFirst()
+                .get();
+
+        return cliente;
+    }
+
+    public static void AgendarCorridaProgramada() {
+
+    }
+
+    public static void AgendarCorridaImediata() {
+
+    }
+
+    public static Corrida BuscarCorrida() {
+
+        Corrida corrida = null;
+
+        return corrida;
+    }
+
+    private static void MudarStatusCorrida() {
+        System.out.println("## Mudar status da corrida\n Definir status como: \n");
+        System.out.println("\n 1 - Aguardando aviso");
+        System.out.println("--------- Defina este status apenas se o algum motorista já tiver pego a corrifa mas o cliente ainda NÃO foi avisado.");
+        System.out.println(" 2 - Aviso efetuado");
+        System.out.println("--------- Defina este status apenas se o cliente já foi avisado mas ainda não foi atendido.");
+        System.out.println(" 3 - Tripulado");
+        System.out.println("--------- Defina este status apenas se o cliente já foi avisado e atendido.");
+        System.out.println(" 4 - Cancelado pelo passageiro");
+        System.out.println("--------- Defina este status apenas se a corrida foi cancelada pelo cliente.");
+        System.out.println(" 5 - Cancelado pela cooperativa por falta de carro");
+        System.out.println("--------- Defina este status apenas se a corrida foi cancelada pelo cooperativa.");
+
+        byte resposta = le.nextByte();
     }
 
     public static Cnh CadastrarCnh() {
@@ -269,4 +424,5 @@ public class RunRunTaxi {
     public static boolean empty(final String s) {
         return s == null || s.trim().isEmpty();
     }
+
 }

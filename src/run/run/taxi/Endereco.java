@@ -19,8 +19,6 @@ public class Endereco {
         this.cidade = cidade;
     }
     
-    
-
     public void setEstado(String estado) {
         this.estado = estado;
     }
