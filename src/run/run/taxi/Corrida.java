@@ -22,7 +22,15 @@ public class Corrida {
         this.horaSaida = horaSaida;
         this.cliente = cliente;
         this.status = status;
-}
+    }
+    
+       public Corrida(Endereco enderecoSaida, String telefoneContato, String bairroDestino, Cliente cliente, String status) {
+        this.enderecoSaida = enderecoSaida;
+        this.telefoneContato = telefoneContato;
+        this.bairroDestino = bairroDestino;
+        this.cliente = cliente;
+        this.status = status;
+    }
     
     public Endereco getEnderecoSaida() {
         return enderecoSaida;

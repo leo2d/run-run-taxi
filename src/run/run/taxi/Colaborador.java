@@ -21,7 +21,7 @@ public class Colaborador {
     public Colaborador(String nome, String cpf, int numeroVR, String telefoneFixo, 
             String telefoneMovel, String dataAdmissao, Cnh cnh, Veiculo veiculo,Endereco endereco) {
         this.nome = nome;
-        this.setCpf(cpf);
+        this.cpf = cpf;
         this.numeroVR = numeroVR;
         this.cnh = cnh;
         this.veiculo = veiculo;

@@ -20,6 +20,7 @@ public class RunRunTaxi {
         System.out.println("\n****************************************\n");
         System.out.println("\tBem vindo ao Run Run Taxi");
         System.out.println("\n****************************************\n \n");
+        GerarDadosParaTestes();
         ImprimirMenuInicial();
     }
 
@@ -67,7 +68,8 @@ public class RunRunTaxi {
         if (ValidarOpcaoMenu(resposta, opcoes)) {
             switch (resposta) {
                 case 1:
-                    CadastrarCliente();
+                    System.out.println("Nome: ");
+                    CadastrarCliente(input.nextLine().replaceAll("[.-]", "").trim());
                     ImprimirMenuCliente();
                     break;
                 case 2:
@@ -144,7 +146,7 @@ public class RunRunTaxi {
                     ImprimirMenuCorrida();
                     break;
                 case 2:
-                    AgendarCorridaImediata();
+                    CadastrarCorridaImediata();
                     ImprimirMenuCorrida();
                     break;
                 case 3:
@@ -175,8 +177,9 @@ public class RunRunTaxi {
 
     }
 
-    public static void CadastrarCliente() {
+    public static Cliente CadastrarCliente(String nome) {
 
+        Cliente cliente = null;
         System.out.println(" ####Cadastro de clientes : \n");
         System.out.println(" Qual tipo de cadastro deseja fazer agora? ");
         System.out.println(" 1 - Completo ");
@@ -187,29 +190,25 @@ public class RunRunTaxi {
         le.nextLine();
 
         if (resposta == 1) {
-            System.out.println(" Nome: ");
             codigoCliente++;
-            CadastrarCliente(le.nextLine().replaceAll("[.-]", ""));
+            System.out.println("Telefone 01:   ");
+            String telefoneA = le.next();
+            System.out.println("Telefone 02:   ");
+            String telefoneB = le.next();
+            cliente = new Cliente(codigoCliente, nome, telefoneA, telefoneB, CadastrarEndereco());
+            Clientes.add(cliente);
+            System.out.println("Cadastro finalizado. ");
         } else if (resposta == 2) {
-            System.out.println(" Nome: ");
             codigoCliente++;
-            Cliente cliente = new Cliente(codigoCliente, le.nextLine().replaceAll("[.-]", ""));
+            cliente = new Cliente(codigoCliente, nome);
             Clientes.add(cliente);
             System.out.println(" Ok. Finalizando Cadastro.. ");
         } else {
             System.out.println("Opcao invalida! Tente novamente.\n");
-            CadastrarCliente();
+            CadastrarCliente(nome);
         }
-    }
 
-    public static void CadastrarCliente(String nome) {
-
-        System.out.println("Telefone 01:   ");
-        String telefoneA = le.next();
-        System.out.println("Telefone 02:   ");
-        String telefoneB = le.next();
-        Cliente cliente = new Cliente(codigoCliente, nome, telefoneA, telefoneB, CadastrarEndereco());
-        Clientes.add(cliente);
+        return cliente;
     }
 
     public static void ImprimirClientes() {
@@ -217,15 +216,18 @@ public class RunRunTaxi {
             for (Cliente c : Clientes) {
                 System.out.println("Código : " + c.getCodigo());
                 System.out.println("Nome: " + c.getNome());
-                if (!empty(c.getTelefoneA())) 
-                    System.out.println("Telefone 01: " + c.getTelefoneA());       
-                if (!empty(c.getEndereco().getCep())) {
+
+                if (c.getTelefoneA() != null) {
+                    System.out.println("Telefone 01: " + c.getTelefoneA());
+                }
+
+                if (c.getEndereco() != null) {
                     System.out.println("Telefone 02: " + c.getTelefoneB());
                     System.out.println("Estado: " + c.getEndereco().getEstado());
                     System.out.println("Cidade: " + c.getEndereco().getCidade());
                     System.out.println("Cep: " + c.getEndereco().getCep());
                 }
-                if (!empty(c.getEndereco().getLogradouro())) {
+                if (c.getEndereco() != null) {
                     System.out.println("Bairro: " + c.getEndereco().getBairro());
                     System.out.println("Rua/Logradouro: " + c.getEndereco().getLogradouro());
                     System.out.println("Numero: " + c.getEndereco().getNumero());
@@ -285,13 +287,54 @@ public class RunRunTaxi {
 
     public static void DesligarColaborador() {
 
-        Colaborador colaborador = BuscarColaboradorPorCpf();
-        System.out.print("Digite a data de desligamento: ");
+        Colaborador colaborador = null;
+        byte resposta = 0;
+        boolean temp = true;
+        while(temp){
+            System.out.println("1 - Buscar colaborador por CPF");
+            System.out.println("2 - Selecionar um colaborador da lista");
+            resposta = le.nextByte();
+        
+            if(resposta == 1){
+                colaborador = BuscarColaboradorPorCpf();
+                temp = false; }
+            else if(resposta == 2){
+                colaborador = SelecionarMotorista();
+                temp = false; }
+            else
+                System.out.println("Resposta invalida!");
+        }
+    
+        System.out.println("Digite a data de desligamento: ");
         String dataDesligamento = le.next();
         colaborador.setDataDesligamento(dataDesligamento);
         colaborador.setFuncionarioAtivo(false);
-        System.out.print("Colaborador inativado com sucesso.\n");
+        System.out.println("Colaborador inativado com sucesso.\n");
 
+    }
+
+    public static Colaborador SelecionarMotorista() {
+
+        if (!Colaboradores.isEmpty()) {
+            for (Colaborador c : Colaboradores) {
+                if (c.isFuncionarioAtivo()) {
+                    System.out.println("Nome: " + c.getNome());
+                    System.out.println("Numero VR: " + c.getNumeroVR());
+                    System.out.println("Telefone Movel: " + c.getTelefoneMovel());
+                    System.out.println("Veiculo: " + c.getVeiculo().getModelo());
+                    System.out.println("Cor do veiculo: " + c.getVeiculo().getCor());
+                    System.out.println("\n----------- Selecionar este motorista? \t1 - Sim \t 2 - Nao\n");
+                    byte resposta = le.nextByte();
+                    if (resposta == 1)
+                        return c;
+                } 
+                System.out.println("\n============================================================\n");
+            }
+        } else {
+            System.out.println("**Nenhum colaborador Ativo cadastrado.\n");
+        }
+
+        return null;
     }
 
     public static void ImprimirColaboradores() {
@@ -315,10 +358,13 @@ public class RunRunTaxi {
                 System.out.println("Numero: " + c.getEndereco().getNumero());
                 if (!c.isFuncionarioAtivo()) {
                     System.out.println("Status: Desligado");
-                    System.out.print("Data de desligamento: " + c.getDataDesligamento() + "\n");
-                } else {
+                    System.out.println("Data de desligamento: " + c.getDataDesligamento() + "\n");
+                } else 
                     System.out.println("Status: Ativo \n");
-                }
+                System.out.println("Veiculo: " + c.getVeiculo().getModelo());
+                System.out.println("Fabricante do veiculo: " + c.getVeiculo().getFabricante());
+                System.out.println("Cor do veiculo: " + c.getVeiculo().getCor());
+                System.out.println("Placa do veiculo: " + c.getVeiculo().getPlaca());
                 System.out.println("\n============================================================\n");
             }
         } else {
@@ -326,15 +372,10 @@ public class RunRunTaxi {
         }
     }
 
-    public static Cliente BuscarClientePorNome() {
+    public static Cliente BuscarClientePorNome(String nome) {
 
         Cliente cliente = null;
         List<Cliente> clientesRetornados = new ArrayList<Cliente>();
-        System.out.print("\nDigite o nome do cliente pra esta corrida e tecle ENTER: ");
-        // le.nextLine();
-        String nome;
-        nome = input.nextLine().replaceAll("[.-]", "").trim();
-
         for (Cliente c : Clientes) {
             if (c.getNome().contains(nome)) {
                 clientesRetornados.add(c);
@@ -368,37 +409,55 @@ public class RunRunTaxi {
             System.out.println("    Bairro: " + c.getEnderecoSaida().getBairro());
             System.out.println("    Rua: " + c.getEnderecoSaida().getLogradouro());
             System.out.println("    Numero: " + c.getEnderecoSaida().getNumero());
-            System.out.println("Data e horario de saida: " + c.getDataSaida() + " - " + c.getHoraSaida());
-            if (c.getColaborador() != null) {
+            if (c.getDataSaida() != null)
+                System.out.println("Data e horario de saida: " + c.getDataSaida() + " - " + c.getHoraSaida());
+            if (c.getColaborador() != null)
                 System.out.println("VR Motorista: " + c.getColaborador().getNumeroVR());
-            }
+            
             System.out.println("Status: " + c.getStatus());
-          
-            if (!c.getStatus().contains("Finalizad")) {
+
+            if (!c.getStatus().contains("inalizad") && !c.getStatus().contains("ancelad")) {
                 byte editar = 0;
                 while (editar != 1 && editar != 2) {
                     System.out.println("\n####Corrida nao finalizada!\n####Deseja editar esta corrida?\n 1 - Sim \n 2 - Nao ");
                     editar = le.nextByte();
-                    if (editar == 1) 
+                    if (editar == 1) {
                         EditarCorrida(c);
-                    else 
+                    } else {
                         continue;
-                  }
+                    }
+                }
             }
-         
+
             System.out.println("\n============================================================\n");
         }
-
-        
 
     }
 
     public static void EditarCorrida(Corrida corrida) {
-        
-        System.out.println(" 1 - Cancelar corrida");
+        System.out.println(" 1 - Cliente cancelou corrida");
         System.out.println(" 2 - Mudar motorista");
-        System.out.println(" 3 - ");
-        
+        // System.out.println(" 3 - Avisar o cliente");
+        System.out.println(" 3 - Cliente ciente que o carro está a caminho");
+        System.out.println(" 4 - Cliente foi pego pelo carro");
+        System.out.println(" 5 - Cliente foi entregue ao destino");
+        byte resposta = le.nextByte();
+        if (resposta == 1) {
+            corrida.setStatus("cancelado pelo passageiro");
+        } else if (resposta == 3) {
+            corrida.setStatus("aviso efetuado");
+        } else if (resposta == 2) {
+            System.out.println("Selecione o novo motorista:");
+            corrida.setColaborador(SelecionarMotorista());
+            corrida.setBairroDestino("aguardando aviso");
+        }else if (resposta == 4) {
+            corrida.setStatus("tripulado");
+        }else if (resposta == 5) {
+            corrida.setStatus("finalizada");
+        }
+        else {
+            EditarCorrida(corrida);
+        }
     }
 
     public static void AgendarCorridaProgramada() {
@@ -407,11 +466,13 @@ public class RunRunTaxi {
         System.out.println("_________________________________________\n");
         Cliente cliente;
 
-        cliente = BuscarClientePorNome();
+        System.out.println("Nome do cliente: ");
+        String nome;
+        nome = input.nextLine().replaceAll("[.-]", "").trim();
+        cliente = BuscarClientePorNome(nome);
         while (cliente == null) {
             System.out.println("Cliente não encontrado. Cadastre o cliente e tente novamente.\n");
-            CadastrarCliente();
-            cliente = BuscarClientePorNome();
+            cliente = CadastrarCliente(nome);
         }
 
         System.out.println("Rua/Logradouro: ");
@@ -462,8 +523,50 @@ public class RunRunTaxi {
 
     }
 
-    public static void AgendarCorridaImediata() {
+    public static void CadastrarCorridaImediata() {
 
+        System.out.println("\t Cadastrar corrida Imediata ");
+        System.out.println("_________________________________________\n");
+        Cliente cliente;
+
+        System.out.println("***Dados de saida.");
+        System.out.println("Rua/Logradouro: ");
+        String logradouro = le.next().trim();
+
+        System.out.println("Numero: ");
+        int numero = le.nextInt();
+
+        Endereco enderecoSaida = CadastrarEndereco(logradouro, numero);
+
+        System.out.println("Digite o bairro de destino: ");
+        String bairroDestino = le.next();
+
+        System.out.println("Telefone Contato: ");
+        String telefoneContato = le.next();
+
+        System.out.println("Nome do cliente: ");
+        String nome;
+        nome = input.nextLine().replaceAll("[.-]", "").trim();
+        cliente = BuscarClientePorNome(nome);
+        while (cliente == null) {
+            System.out.println("Cliente não encontrado. Cadastre o cliente e tente novamente.\n");
+            cliente = CadastrarCliente(nome);
+        }
+
+        Corrida corrida = new Corrida(enderecoSaida, telefoneContato, bairroDestino, cliente, "aguardando VR");
+
+        System.out.println("Selecionae o motorista que aceitar esta corrida:\n\t***SE NINGUEM ACEITAR, A CORRIDA SERÁ CANCELADA AUTOMATICAMENTE.\n");
+
+        Colaborador colaborador;
+        colaborador = SelecionarMotorista();
+        if (colaborador != null) {
+            corrida.setColaborador(colaborador);
+            corrida.setStatus("aguardando aviso");
+        } else {
+            System.out.println("A corrida foi cancelada por falta de motorista.\n");
+            corrida.setStatus("cancelado pela cooperativa por falta de carro");
+        }
+        Corridas.add(corrida);
     }
 
     public static Corrida BuscarCorrida() {
@@ -471,24 +574,6 @@ public class RunRunTaxi {
         Corrida corrida = null;
 
         return corrida;
-    }
-
-    private static void MudarStatusCorrida() {
-        System.out.println("## Mudar status da corrida\n Definir status como: \n");
-        System.out.println("\n 1 - Aguardando aviso");
-        System.out.println("--------- Defina este status apenas se o algum motorista já tiver pego a corrifa mas o cliente ainda NÃO foi avisado.");
-        System.out.println(" 2 - Aviso efetuado");
-        System.out.println("--------- Defina este status apenas se o cliente já foi avisado mas ainda não foi atendido.");
-        System.out.println(" 3 - Tripulado");
-        System.out.println("--------- Defina este status apenas se o cliente já foi avisado e atendido.");
-        System.out.println(" 4 - Corrida finalizada");
-        System.out.println("--------- Defina este status apenas se a corrida foi já foi finalizada.");
-        System.out.println(" 5 - Cancelado pelo passageiro");
-        System.out.println("--------- Defina este status apenas se a corrida foi cancelada pelo cliente.");
-        System.out.println(" 6 - Cancelado pela cooperativa por falta de carro");
-        System.out.println("--------- Defina este status apenas se a corrida foi cancelada pelo cooperativa.");
-
-        byte resposta = le.nextByte();
     }
 
     public static Cnh CadastrarCnh() {
@@ -543,7 +628,7 @@ public class RunRunTaxi {
 
         return endereco;
     }
-    
+
     public static Endereco CadastrarEndereco(String rua, int numero) {
         Endereco endereco = new Endereco();
 
@@ -555,7 +640,7 @@ public class RunRunTaxi {
 
         System.out.println("Bairro: ");
         endereco.setBairro(le.next().trim());
-        
+
         System.out.println("Complemento: ");
         endereco.setComplemento(le.next());
 
@@ -564,6 +649,37 @@ public class RunRunTaxi {
 
     public static boolean empty(final String s) {
         return s == null || s.trim().isEmpty();
+    }
+
+    private static void GerarDadosParaTestes() {
+        Endereco enderecoCliente = new Endereco();
+        enderecoCliente.setLogradouro("Rua25");
+        enderecoCliente.setComplemento("2andar");
+        enderecoCliente.setBairro("centro");
+        enderecoCliente.setNumero(22);
+        Endereco enderecoColaborador = new Endereco("ruaSAOJoao", "Bairro10",
+                "PertoDoBar", "1231321", 444, "MG", "JF");
+
+        Cliente c1 = new Cliente(999, "moises");
+        Cliente c2 = new Cliente(998, "jubileu");
+        c2.setEndereco(enderecoCliente);
+        Cliente c3 = new Cliente(997, "alice");
+
+        Clientes.add(c1);
+        Clientes.add(c2);
+        Clientes.add(c3);
+
+        Veiculo v1 = new Veiculo("Versa", "Nissan", "preto", "APU2400G");
+        Veiculo v2 = new Veiculo("Auto", "Tesla", "prata", "R72600X");
+        Cnh a1 = new Cnh("B", 44, "15/26/2023");
+
+        Colaborador m1 = new Colaborador("Joe", "617.017.450-11", 666, "400028922",
+                "99999999", "10/04/2015", a1, v1, enderecoColaborador);
+        Colaborador m2 = new Colaborador("Mary", "57517638742", 667, "400028922",
+                "99999999", "23/02/2016", a1, v2, enderecoColaborador);
+
+        Colaboradores.add(m1);
+        Colaboradores.add(m2);
     }
 
 }
