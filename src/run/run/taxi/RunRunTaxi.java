@@ -25,6 +25,8 @@ public class RunRunTaxi {
     }
 
     public static void ImprimirMenuInicial() {
+        System.out.println("\n\t Menu inicial ");
+        System.out.println("____________________________________\n");
         System.out.println("\n 1 - Menu cliente");
         System.out.println(" 2 - Menu colaborador");
         System.out.println(" 3 - Menu corrida");
@@ -60,8 +62,9 @@ public class RunRunTaxi {
         System.out.println("____________________________________\n");
         System.out.println("\n 1 - Cadastrar cliente");
         System.out.println(" 2 - Listar clientes Cadastrados");
-        System.out.println(" 3 - Voltar");
-        System.out.println(" 4 - Sair\n");
+        System.out.println(" 3 - Alterar dados de um cliente");
+        System.out.println(" 4 - Voltar");
+        System.out.println(" 5 - Sair\n");
 
         int[] opcoes = {1, 2, 3, 4};
         byte resposta = le.nextByte();
@@ -77,15 +80,18 @@ public class RunRunTaxi {
                     ImprimirMenuCliente();
                     break;
                 case 3:
-                    ImprimirMenuInicial();
+                    ImprimirMenuEdicaoCliente();
+                    ImprimirMenuCliente();
                     break;
+                case 4:
+                    ImprimirMenuInicial();
                 default:
                     System.out.println("Encerrando Seção...\n");
                     break;
             }
         } else {
             System.out.println("\n**Opção inválida! Tente novamente.\n");
-            ImprimirMenuInicial();
+            ImprimirMenuCliente();
         }
 
     }
@@ -124,7 +130,7 @@ public class RunRunTaxi {
             }
         } else {
             System.out.println("\n**Opção inválida! Tente novamente.\n");
-            ImprimirMenuInicial();
+            ImprimirMenuColaborador();
         }
     }
 
@@ -162,7 +168,7 @@ public class RunRunTaxi {
             }
         } else {
             System.out.println("\n**Opção inválida! Tente novamente.\n");
-            ImprimirMenuInicial();
+            ImprimirMenuCorrida();
         }
 
     }
@@ -197,12 +203,12 @@ public class RunRunTaxi {
             String telefoneB = le.next();
             cliente = new Cliente(codigoCliente, nome, telefoneA, telefoneB, CadastrarEndereco());
             Clientes.add(cliente);
-            System.out.println("Cadastro finalizado. ");
+            System.out.println("Cadastro finalizado.\n ");
         } else if (resposta == 2) {
             codigoCliente++;
             cliente = new Cliente(codigoCliente, nome);
             Clientes.add(cliente);
-            System.out.println(" Ok. Finalizando Cadastro.. ");
+            System.out.println(" Ok. Finalizando Cadastro.. \n");
         } else {
             System.out.println("Opcao invalida! Tente novamente.\n");
             CadastrarCliente(nome);
@@ -217,17 +223,15 @@ public class RunRunTaxi {
                 System.out.println("Código : " + c.getCodigo());
                 System.out.println("Nome: " + c.getNome());
 
-                if (c.getTelefoneA() != null) {
+                if (c.getTelefoneA() != null) 
                     System.out.println("Telefone 01: " + c.getTelefoneA());
-                }
+                if (c.getTelefoneB() != null)
+                    System.out.println("Telefone 02: " + c.getTelefoneB());
 
                 if (c.getEndereco() != null) {
-                    System.out.println("Telefone 02: " + c.getTelefoneB());
                     System.out.println("Estado: " + c.getEndereco().getEstado());
                     System.out.println("Cidade: " + c.getEndereco().getCidade());
                     System.out.println("Cep: " + c.getEndereco().getCep());
-                }
-                if (c.getEndereco() != null) {
                     System.out.println("Bairro: " + c.getEndereco().getBairro());
                     System.out.println("Rua/Logradouro: " + c.getEndereco().getLogradouro());
                     System.out.println("Numero: " + c.getEndereco().getNumero());
@@ -239,6 +243,74 @@ public class RunRunTaxi {
             System.out.println("**Nenhum cliente cadastrado.\n");
         }
 
+    }
+
+    public static void ImprimirMenuEdicaoCliente() {
+        boolean temp = true;
+        while (temp) {
+            System.out.println("1 - Buscar cliente por nome ");
+            System.out.println("2 - Selecionar um cliente da lista ");
+            byte resposta = le.nextByte();
+            if (resposta == 1) {
+                System.out.println("Nome do cliente: ");
+                String nome;
+                nome = input.nextLine().replaceAll("[.-]", "").trim();
+                EditarCliente(BuscarClientePorNome(nome));
+                temp = false;
+            } else if (resposta == 2) {
+                EditarCliente(SelecionarCliente());
+                temp = false;
+            }
+        }
+
+    }
+
+    public static Cliente SelecionarCliente() {
+        if (!Clientes.isEmpty()) {
+            for (Cliente c : Clientes) {
+                System.out.println("Código : " + c.getCodigo());
+                System.out.println("Nome: " + c.getNome());
+                System.out.println("\n----------- Selecionar este cliente? \t1 - Sim \t 2 - Nao\n");
+                byte resposta = le.nextByte();
+                if (resposta == 1) {
+                    return c;
+                }
+                System.out.println("\n============================================================\n");
+            }
+        } else {
+            System.out.println("**Nenhum cliente cadastrado.\n");
+        }
+        return null;
+    }
+
+    public static void EditarCliente(Cliente cliente) {
+
+        System.out.println("1 - Alterar telefone 1");
+        System.out.println("2 - Alterar telefone 2");
+        System.out.println("3 - Alterar Endereco");
+
+        byte resposta = le.nextByte();
+        switch (resposta) {
+            case 1:
+                System.out.println("Digite o novo telefone: ");
+                String telefoneA = le.next();
+                cliente.setTelefoneA(telefoneA);
+                break;
+            case 2:
+                System.out.println("Digite o novo telefone: ");
+                String telefoneB = le.next();
+                cliente.setTelefoneB(telefoneB);
+                break;
+            case 3:
+                System.out.println("Digite o novo Endereco ");
+                Endereco endereco = CadastrarEndereco();
+                cliente.setEndereco(endereco);
+                break;
+            default:
+                System.out.println("Opcao invalida!! Tente novamente.");
+                EditarCliente(cliente);
+                break;
+        }
     }
 
     public static void CadastrarColaborador() {
@@ -290,21 +362,22 @@ public class RunRunTaxi {
         Colaborador colaborador = null;
         byte resposta = 0;
         boolean temp = true;
-        while(temp){
+        while (temp) {
             System.out.println("1 - Buscar colaborador por CPF");
             System.out.println("2 - Selecionar um colaborador da lista");
             resposta = le.nextByte();
-        
-            if(resposta == 1){
+
+            if (resposta == 1) {
                 colaborador = BuscarColaboradorPorCpf();
-                temp = false; }
-            else if(resposta == 2){
+                temp = false;
+            } else if (resposta == 2) {
                 colaborador = SelecionarMotorista();
-                temp = false; }
-            else
+                temp = false;
+            } else {
                 System.out.println("Resposta invalida!");
+            }
         }
-    
+
         System.out.println("Digite a data de desligamento: ");
         String dataDesligamento = le.next();
         colaborador.setDataDesligamento(dataDesligamento);
@@ -325,9 +398,10 @@ public class RunRunTaxi {
                     System.out.println("Cor do veiculo: " + c.getVeiculo().getCor());
                     System.out.println("\n----------- Selecionar este motorista? \t1 - Sim \t 2 - Nao\n");
                     byte resposta = le.nextByte();
-                    if (resposta == 1)
+                    if (resposta == 1) {
                         return c;
-                } 
+                    }
+                }
                 System.out.println("\n============================================================\n");
             }
         } else {
@@ -359,8 +433,9 @@ public class RunRunTaxi {
                 if (!c.isFuncionarioAtivo()) {
                     System.out.println("Status: Desligado");
                     System.out.println("Data de desligamento: " + c.getDataDesligamento() + "\n");
-                } else 
+                } else {
                     System.out.println("Status: Ativo \n");
+                }
                 System.out.println("Veiculo: " + c.getVeiculo().getModelo());
                 System.out.println("Fabricante do veiculo: " + c.getVeiculo().getFabricante());
                 System.out.println("Cor do veiculo: " + c.getVeiculo().getCor());
@@ -409,11 +484,13 @@ public class RunRunTaxi {
             System.out.println("    Bairro: " + c.getEnderecoSaida().getBairro());
             System.out.println("    Rua: " + c.getEnderecoSaida().getLogradouro());
             System.out.println("    Numero: " + c.getEnderecoSaida().getNumero());
-            if (c.getDataSaida() != null)
+            if (c.getDataSaida() != null) {
                 System.out.println("Data e horario de saida: " + c.getDataSaida() + " - " + c.getHoraSaida());
-            if (c.getColaborador() != null)
+            }
+            if (c.getColaborador() != null) {
                 System.out.println("VR Motorista: " + c.getColaborador().getNumeroVR());
-            
+            }
+
             System.out.println("Status: " + c.getStatus());
 
             if (!c.getStatus().contains("inalizad") && !c.getStatus().contains("ancelad")) {
@@ -450,12 +527,11 @@ public class RunRunTaxi {
             System.out.println("Selecione o novo motorista:");
             corrida.setColaborador(SelecionarMotorista());
             corrida.setBairroDestino("aguardando aviso");
-        }else if (resposta == 4) {
+        } else if (resposta == 4) {
             corrida.setStatus("tripulado");
-        }else if (resposta == 5) {
+        } else if (resposta == 5) {
             corrida.setStatus("finalizada");
-        }
-        else {
+        } else {
             EditarCorrida(corrida);
         }
     }
@@ -479,13 +555,13 @@ public class RunRunTaxi {
         String logradouro = le.next().trim();
 
         System.out.println("Numero: ");
-        int numero = le.nextInt();
+        String numero = le.next();
 
         String telefoneContato = null;
         Endereco endereco;
         if (cliente.getEndereco() != null) {
 
-            if (!cliente.getEndereco().getLogradouro().equals(logradouro) | cliente.getEndereco().getNumero() == numero) {
+            if (!cliente.getEndereco().getLogradouro().equals(logradouro) | cliente.getEndereco().getNumero().contains(numero)) {
                 System.out.println("Endereços diferentes. Cadestre o endereco de saida para esta corrdia: ");
                 endereco = CadastrarEndereco(logradouro, numero);
 
@@ -534,7 +610,7 @@ public class RunRunTaxi {
         String logradouro = le.next().trim();
 
         System.out.println("Numero: ");
-        int numero = le.nextInt();
+        String numero = le.next();
 
         Endereco enderecoSaida = CadastrarEndereco(logradouro, numero);
 
@@ -612,7 +688,7 @@ public class RunRunTaxi {
         endereco.setLogradouro(le.next().trim());
 
         System.out.println("Numero: ");
-        endereco.setNumero(le.nextInt());
+        endereco.setNumero(le.next().trim());
 
         System.out.println("Complemento: ");
         endereco.setComplemento(le.next());
@@ -629,7 +705,7 @@ public class RunRunTaxi {
         return endereco;
     }
 
-    public static Endereco CadastrarEndereco(String rua, int numero) {
+    public static Endereco CadastrarEndereco(String rua, String numero) {
         Endereco endereco = new Endereco();
 
         System.out.println("Rua/Logradouro: " + rua);
@@ -656,14 +732,20 @@ public class RunRunTaxi {
         enderecoCliente.setLogradouro("Rua25");
         enderecoCliente.setComplemento("2andar");
         enderecoCliente.setBairro("centro");
-        enderecoCliente.setNumero(22);
+        enderecoCliente.setNumero("22");
+        enderecoCliente.setEstado("MG");
+        enderecoCliente.setCidade("Barangao");
+        enderecoCliente.setCep("44442-121");
         Endereco enderecoColaborador = new Endereco("ruaSAOJoao", "Bairro10",
-                "PertoDoBar", "1231321", 444, "MG", "JF");
+                "PertoDoBar", "1231321", "444", "MG", "JF");
 
-        Cliente c1 = new Cliente(999, "moises");
-        Cliente c2 = new Cliente(998, "jubileu");
+        codigoCliente++;
+        Cliente c1 = new Cliente(codigoCliente, "moises");
+        codigoCliente++;
+        Cliente c2 = new Cliente(codigoCliente, "jubileu", "989898989", "412154521", enderecoCliente);
         c2.setEndereco(enderecoCliente);
-        Cliente c3 = new Cliente(997, "alice");
+        codigoCliente++;
+        Cliente c3 = new Cliente(codigoCliente, "alice");
 
         Clientes.add(c1);
         Clientes.add(c2);
